@@ -1,0 +1,237 @@
+.offerSection {
+  background: #fff;
+  overflow: hidden;
+  padding: 0;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+}
+
+.offerContent {
+  align-items: stretch;
+  background: #ff5a18;
+  display: grid;
+  grid-template-columns: minmax(430px, 560px) minmax(0, 1fr);
+  min-height: 576px;
+  overflow: hidden;
+  padding: 28px 0 30px 59px;
+}
+
+.offerIntro {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  padding: 36px 48px 20px 0;
+  text-align: left;
+}
+
+.offerHeading {
+  color: #fff;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.03;
+  margin: 0 0 24px;
+  max-width: 500px;
+}
+
+.offerSubHeading {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.45;
+  margin: 0;
+  max-width: 505px;
+}
+
+.arrowControls {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 42px;
+}
+
+.arrowButton {
+  align-items: center;
+  background: #050505;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 34px;
+  height: 56px;
+  justify-content: center;
+  line-height: 1;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 56px;
+}
+
+.arrowButton:hover {
+  background: #1c1c1c;
+  transform: translateY(-1px);
+}
+
+.offerCarousel {
+  display: flex;
+  gap: 15px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.offerCarousel::-webkit-scrollbar {
+  display: none;
+}
+
+.offerCard {
+  background: #fff;
+  flex: 0 0 362px;
+  height: 498px;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+.imagePlaceholder {
+  background: #fff;
+  height: calc(100% - 58px);
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.offerImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.offerOverlay {
+  align-items: center;
+  background: #080808;
+  border: 1px solid #ff5a18;
+  bottom: 10px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  display: flex;
+  height: 47px;
+  justify-content: space-between;
+  left: 10px;
+  padding: 7px 10px;
+  position: absolute;
+  right: 10px;
+  z-index: 2;
+}
+
+.profileInfo {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.avatar {
+  background-color: #aaa;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  flex: 0 0 auto;
+  height: 24px;
+  overflow: hidden;
+  width: 24px;
+}
+
+.avatarImage {
+  border-radius: 50%;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.name {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin: 0 0 2px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.company {
+  color: #9f9f9f;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkedinIcon {
+  align-items: center;
+  border: 1px solid #fff;
+  color: #fff;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 800;
+  height: 14px;
+  justify-content: center;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  width: 14px;
+}
+
+.linkedinIcon:hover {
+  background: #fff;
+  color: #080808;
+}
+
+.linkedinIconDummy {
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .offerContent {
+    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+    padding-left: 32px;
+  }
+  .offerIntro { padding-right: 32px; }
+  .offerHeading { font-size: 48px; }
+  .offerSubHeading { font-size: 18px; }
+  .offerCard { flex-basis: 320px; height: 440px; }
+}
+
+@media (max-width: 768px) {
+  .offerContent {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    padding: 34px 18px 32px;
+  }
+  .offerIntro { padding: 0 0 24px; }
+  .offerHeading { font-size: 36px; max-width: 310px; }
+  .offerSubHeading { max-width: 100%; }
+  .arrowControls { margin-top: 24px; padding-top: 0; }
+  .offerCarousel { margin: 0 -18px; padding: 0 18px; }
+  .offerCard { flex-basis: 280px; height: 390px; }
+}
+
+@media (max-width: 480px) {
+  .offerContent { padding: 30px 14px 28px; }
+  .offerHeading { font-size: 30px; max-width: 100%; }
+  .offerSubHeading { font-size: 15px; }
+  .arrowButton { height: 46px; width: 46px; }
+  .offerCarousel { margin: 0 -14px; padding: 0 14px; }
+  .offerCard { flex-basis: min(245px, calc(100vw - 56px)); height: 345px; }
+}

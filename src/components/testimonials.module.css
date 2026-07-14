@@ -1,0 +1,182 @@
+.milestoneContainer {
+  background-color: #fff6f4;
+  padding: 5rem 2rem;
+  text-align: center;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+}
+
+.sectionHeading {
+  margin: 1rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.marqueeContainer {
+  overflow: hidden;
+  width: 100%;
+  margin: 2rem 0 1rem;
+  position: relative;
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  animation: marqueeScroll 70s linear infinite;
+}
+
+.marqueeCard {
+  background-color: #fff;
+  border: 1px solid #fdfdfdec;
+  padding: 2rem;
+  width: 28rem;
+  min-height: 10rem;
+  text-align: left;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.marqueeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marqueeContainer:hover .marqueeTrack {
+  animation-play-state: paused;
+}
+
+.companyHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.companyLogoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companyLogo {
+  object-fit: contain;
+  width: 32px;
+  height: 32px;
+}
+
+.companyName {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.testimonialText {
+  color: #111;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0.8rem 0 1.4rem;
+  font-style: italic;
+  flex-grow: 1;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.userAvatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #ccc;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.userAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.userName {
+  font-weight: 600;
+  margin: 0;
+  color: #000;
+}
+
+.userCompany {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0;
+}
+
+.footerLogos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  color: #555;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.footerLogos span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.footerIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerLogo {
+  object-fit: contain;
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+  .milestoneContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .marqueeCard {
+    width: 22rem;
+    min-height: 14rem;
+    padding: 2rem;
+  }
+
+  .footerLogos { gap: 1.2rem; }
+}
+
+@media (max-width: 480px) {
+  .milestoneContainer { padding: 1rem 1.2rem; }
+  .testimonialText { font-size: 0.9rem; }
+  .marqueeCard {
+    width: min(18rem, calc(100vw - 2.4rem));
+    min-height: 12rem;
+    padding: 1.6rem;
+  }
+}
