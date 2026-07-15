@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import Trust from './components/Trust'
@@ -12,7 +12,7 @@ import GeoBlockModal from './components/GeoBlockModal'
 import { getLocaleFromPath, LOCALE_CONTENT } from './lib/locale'
 import { detectCountry } from './lib/countryDetection'
 import { captureTrackingParams } from './lib/tracking'
-import { detectIndiaBlock, isGeoBypassed, grantGeoBypass } from './lib/geoBlock'
+import { detectIndiaBlock, isIndiaClientHeuristic, isGeoBypassed, grantGeoBypass } from './lib/geoBlock'
 import { useGeoBypass } from './lib/useGeoBypass'
 
 export default function App() {
@@ -23,16 +23,40 @@ export default function App() {
   const [geoBypassed, setGeoBypassed] = useState(() => isGeoBypassed())
   const [showGeoBlock, setShowGeoBlock] = useState(false)
 
+  // Single shared India-detection promise so a click can await the IP lookup
+  // instead of racing it.
+  const indiaPromiseRef = useRef(null)
+  function getIndiaBlockPromise() {
+    if (!indiaPromiseRef.current) indiaPromiseRef.current = detectIndiaBlock()
+    return indiaPromiseRef.current
+  }
+
   // Nav/Hero buttons pass a click event; only the wizard passes lead data.
   // Prefilling Calendly with the submitted email is what lets the backend
   // webhook match the booking back to the meta lead and flip it to scheduled.
-  function openCalendly(lead) {
+  async function openCalendly(lead) {
     if (lead && typeof lead === 'object' && typeof lead.email === 'string') {
       setCalendlyLead(lead)
     }
+    if (geoBypassed) {
+      setShowCalendly(true)
+      return
+    }
     // India geo-block: never open Calendly for Indian visitors unless the
-    // 5-second hold bypass was used this session.
-    if (isIndiaBlocked && !geoBypassed) {
+    // 5-second hold bypass was used this session. The state check catches the
+    // common case instantly; awaiting the shared promise closes the race for
+    // Indian IPs whose device locale/timezone is not Indian (the IP lookup
+    // may still be in flight on a fast first click).
+    let blocked = isIndiaBlocked || isIndiaClientHeuristic()
+    if (!blocked) {
+      try {
+        blocked = await getIndiaBlockPromise()
+      } catch {
+        blocked = false
+      }
+    }
+    if (blocked) {
+      setIsIndiaBlocked(true)
       setShowGeoBlock(true)
       return
     }
@@ -52,7 +76,8 @@ export default function App() {
   const geoHoldProps = isIndiaBlocked && !geoBypassed ? getButtonProps() : {}
 
   useEffect(() => {
-    detectIndiaBlock().then(setIsIndiaBlocked)
+    getIndiaBlockPromise().then(setIsIndiaBlocked)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

@@ -55,6 +55,9 @@ export function useGeoBypass({ onBypass, holdDuration = 5000 }) {
     onTouchStart: startHold,
     onTouchEnd: stopHold,
     onTouchCancel: stopHold,
+    // A finger resting on the CTA while scrolling must not count as a hold,
+    // otherwise mobile users bypass the block by accident.
+    onTouchMove: stopHold,
   }), [startHold, stopHold])
 
   return { isHolding, holdProgress, getButtonProps, startHold, stopHold }
