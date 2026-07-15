@@ -26,13 +26,6 @@ export default function Nav({ onOpenCalendly }) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  function handleGetStarted(e) {
-    e.preventDefault()
-    const el = document.getElementById('capture')
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    setMenuOpen(false)
-  }
-
   return (
     <div style={{ position: 'sticky', top: 0, left: 0, right: 0, zIndex: 50 }}>
       <nav className={styles.navContainer}>

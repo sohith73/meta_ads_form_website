@@ -1,6 +1,7 @@
 import LeadWizard from './LeadWizard'
+import { LOCALE_CONTENT } from '../lib/locale'
 
-export default function Hero({ onOpenCalendly }) {
+export default function Hero({ locale, onOpenCalendly }) {
   return (
     <section className="hero" id="top">
       <div className="hero-grid">
@@ -12,7 +13,7 @@ export default function Hero({ onOpenCalendly }) {
             <span className="hl">FlashFire AI Copilot</span>
           </h1>
           <p className="sub">
-            We apply to 1200 USA job applications &amp; track everything while you focus on winning the interview.
+            {LOCALE_CONTENT[locale].sub}
           </p>
           <div className="hero-ctas">
             <button className="btn-primary" onClick={onOpenCalendly}>Get Started →</button>
@@ -34,7 +35,7 @@ export default function Hero({ onOpenCalendly }) {
           </div>
         </div>{/* hero-left */}
         <div className="wiz-wrap" id="capture">
-          <LeadWizard onOpenCalendly={onOpenCalendly} />
+          <LeadWizard locale={locale} onOpenCalendly={onOpenCalendly} />
         </div>
       </div>
     </section>
