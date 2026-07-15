@@ -7,7 +7,7 @@ const LINKS = [
   { name: 'Testimonials', href: '#testimonials' },
 ]
 
-export default function Nav({ onOpenCalendly }) {
+export default function Nav({ onOpenCalendly, geoHoldProps = {} }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   function scrollTo(href) {
@@ -55,7 +55,7 @@ export default function Nav({ onOpenCalendly }) {
 
           {/* Desktop CTA */}
           <div className={styles.navRight}>
-            <button className={styles.navPrimaryButton} onClick={onOpenCalendly}>
+            <button className={styles.navPrimaryButton} onClick={onOpenCalendly} {...geoHoldProps}>
               Book a Demo →
             </button>
           </div>
@@ -93,7 +93,7 @@ export default function Nav({ onOpenCalendly }) {
       {/* Mobile sticky bottom CTA */}
       {!menuOpen && (
         <div className={styles.navMobileButtonsSticky}>
-          <button className={styles.navMobilePrimary} onClick={onOpenCalendly}>
+          <button className={styles.navMobilePrimary} onClick={onOpenCalendly} {...geoHoldProps}>
             Book a Demo →
           </button>
         </div>

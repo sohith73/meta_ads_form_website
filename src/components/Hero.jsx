@@ -1,7 +1,7 @@
 import LeadWizard from './LeadWizard'
 import { LOCALE_CONTENT } from '../lib/locale'
 
-export default function Hero({ locale, onOpenCalendly }) {
+export default function Hero({ locale, onOpenCalendly, geoHoldProps = {} }) {
   return (
     <section className="hero" id="top">
       <div className="hero-grid">
@@ -16,7 +16,7 @@ export default function Hero({ locale, onOpenCalendly }) {
             {LOCALE_CONTENT[locale].sub}
           </p>
           <div className="hero-ctas">
-            <button className="btn-primary" onClick={onOpenCalendly}>Get Started →</button>
+            <button className="btn-primary" onClick={onOpenCalendly} {...geoHoldProps}>Get Started →</button>
             <a className="btn-ghost" href="#process">See How It Works</a>
           </div>
           <div className="stat-row">

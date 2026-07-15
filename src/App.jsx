@@ -8,14 +8,20 @@ import Testimonials from './components/Testimonials'
 import Employers from './components/Employers'
 import Founder from './components/Founder'
 import CalendlyModal from './components/CalendlyModal'
+import GeoBlockModal from './components/GeoBlockModal'
 import { getLocaleFromPath, LOCALE_CONTENT } from './lib/locale'
 import { detectCountry } from './lib/countryDetection'
 import { captureTrackingParams } from './lib/tracking'
+import { detectIndiaBlock, isGeoBypassed, grantGeoBypass } from './lib/geoBlock'
+import { useGeoBypass } from './lib/useGeoBypass'
 
 export default function App() {
   const [showCalendly, setShowCalendly] = useState(false)
   const [calendlyLead, setCalendlyLead] = useState(null)
   const [locale, setLocale] = useState(() => getLocaleFromPath(window.location.pathname))
+  const [isIndiaBlocked, setIsIndiaBlocked] = useState(false)
+  const [geoBypassed, setGeoBypassed] = useState(() => isGeoBypassed())
+  const [showGeoBlock, setShowGeoBlock] = useState(false)
 
   // Nav/Hero buttons pass a click event; only the wizard passes lead data.
   // Prefilling Calendly with the submitted email is what lets the backend
@@ -24,8 +30,30 @@ export default function App() {
     if (lead && typeof lead === 'object' && typeof lead.email === 'string') {
       setCalendlyLead(lead)
     }
+    // India geo-block: never open Calendly for Indian visitors unless the
+    // 5-second hold bypass was used this session.
+    if (isIndiaBlocked && !geoBypassed) {
+      setShowGeoBlock(true)
+      return
+    }
     setShowCalendly(true)
   }
+
+  // Holding a CTA for 5 seconds bypasses the block and opens Calendly
+  // (same behavior as the Next.js site's useGeoBypass on its CTAs).
+  const { getButtonProps } = useGeoBypass({
+    onBypass: () => {
+      grantGeoBypass()
+      setGeoBypassed(true)
+      setShowGeoBlock(false)
+      setShowCalendly(true)
+    },
+  })
+  const geoHoldProps = isIndiaBlocked && !geoBypassed ? getButtonProps() : {}
+
+  useEffect(() => {
+    detectIndiaBlock().then(setIsIndiaBlocked)
+  }, [])
 
   useEffect(() => {
     captureTrackingParams()
@@ -56,8 +84,8 @@ export default function App() {
 
   return (
     <>
-      <Nav onOpenCalendly={openCalendly} />
-      <Hero locale={locale} onOpenCalendly={openCalendly} />
+      <Nav onOpenCalendly={openCalendly} geoHoldProps={geoHoldProps} />
+      <Hero locale={locale} onOpenCalendly={openCalendly} geoHoldProps={geoHoldProps} />
       <Trust />
       <HowItWorks />
       <Tiles />
@@ -65,6 +93,7 @@ export default function App() {
       <Employers />
       <Founder />
       <CalendlyModal isVisible={showCalendly} lead={calendlyLead} onClose={() => setShowCalendly(false)} />
+      <GeoBlockModal isVisible={showGeoBlock} onClose={() => setShowGeoBlock(false)} />
     </>
   )
 }
