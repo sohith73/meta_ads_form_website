@@ -13,11 +13,19 @@ const STATUS_OPTIONS = [
   { value: 'Just exploring', ic: '🔍', label: 'Just', sub: 'Exploring' },
 ]
 
+const DIAL_CODES = [
+  { value: '+1', label: '🇺🇸 +1' },
+  { value: '+91', label: '🇮🇳 +91' },
+]
+
 export default function LeadWizard({ locale, onOpenCalendly }) {
   const [step, setStep] = useState(1)
   const [status, setStatus] = useState('')
   const [statusErr, setStatusErr] = useState(false)
   const [phone, setPhone] = useState('')
+  // Dial code travels with the number so WhatsApp workflows and phone dedupe
+  // get a full international number; default follows the detected country.
+  const [dial, setDial] = useState(() => (getCachedCountryCode() === 'IN' ? '+91' : '+1'))
   const [phoneErr, setPhoneErr] = useState('')
   const [name, setName] = useState('')
   const [nameErr, setNameErr] = useState('')
@@ -37,7 +45,7 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
       setStep(2)
     } else if (step === 2) {
       let err = ''
-      if (phone.length > 32) err = 'Phone number must be at most 32 characters.'
+      if (`${dial} ${phone.trim()}`.length > 32) err = 'Phone number is too long.'
       else if (phone.replace(/[^0-9]/g, '').length < 7) err = 'Please enter a valid phone number.'
       setPhoneErr(err)
       if (err) return
@@ -63,6 +71,7 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
     setSubmitting(true)
     setSubmitErr('')
 
+    const fullPhone = `${dial} ${phone.trim()}`
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 15000)
     try {
@@ -73,7 +82,7 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
         body: JSON.stringify({
           name,
           email,
-          phone,
+          phone: fullPhone,
           status,
           locale,
           clientGeo: {
@@ -117,7 +126,7 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
 
       setDone(true)
       document.body.classList.add('done')
-      if (onOpenCalendly) onOpenCalendly({ name: name.trim(), email: email.trim().toLowerCase(), phone: phone.trim() })
+      if (onOpenCalendly) onOpenCalendly({ name: name.trim(), email: email.trim().toLowerCase(), phone: fullPhone })
     } catch {
       setSubmitting(false)
       setSubmitErr('Something went wrong. Please try again.')
@@ -198,17 +207,33 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
           <p className="wiz-q">What's the best number to reach you on?</p>
           <div className={'field' + (phoneErr ? ' invalid' : '')} id="f-phone">
             <label htmlFor="phone">Phone / WhatsApp number</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              autoComplete="tel"
-              inputMode="tel"
-              placeholder="+1 555 555 5555"
-              maxLength={32}
-              value={phone}
-              onChange={e => { setPhone(e.target.value); setPhoneErr('') }}
-            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <select
+                aria-label="Country code"
+                value={dial}
+                onChange={e => setDial(e.target.value)}
+                style={{
+                  flex: '0 0 auto', padding: '13px 8px', borderRadius: 9,
+                  border: '1.5px solid var(--line)', background: '#fff',
+                  fontSize: '1rem', color: 'var(--ink)', fontFamily: 'inherit',
+                }}
+              >
+                {DIAL_CODES.map(c => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                autoComplete="tel-national"
+                inputMode="tel"
+                placeholder="555 555 5555"
+                maxLength={24}
+                value={phone}
+                onChange={e => { setPhone(e.target.value); setPhoneErr('') }}
+              />
+            </div>
             <div className="field-error">{phoneErr || 'Please enter a valid phone number.'}</div>
           </div>
           <div className="wiz-nav">
