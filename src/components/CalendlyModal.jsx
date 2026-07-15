@@ -1,10 +1,22 @@
 import { useState, useEffect } from 'react'
 import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
 import { X, Calendar, CheckCircle } from 'lucide-react'
+import { getTrackingData } from '../lib/tracking'
 
 const CALENDLY_URL = 'https://calendly.com/feedback-flashfire/15min'
 
-export default function CalendlyModal({ isVisible, onClose }) {
+function buildCalendlyUrl() {
+  const tracking = getTrackingData()
+  const params = new URLSearchParams()
+  params.set('utm_source', tracking.utmSource || 'meta_ads_form')
+  params.set('utm_medium', tracking.utmMedium || 'paid')
+  if (tracking.utmCampaign) params.set('utm_campaign', tracking.utmCampaign)
+  if (tracking.utmContent) params.set('utm_content', tracking.utmContent)
+  if (tracking.utmTerm) params.set('utm_term', tracking.utmTerm)
+  return `${CALENDLY_URL}?${params.toString()}`
+}
+
+export default function CalendlyModal({ isVisible, lead, onClose }) {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
@@ -118,7 +130,14 @@ export default function CalendlyModal({ isVisible, onClose }) {
             </div>
           )}
           <InlineWidget
-            url={CALENDLY_URL}
+            url={buildCalendlyUrl()}
+            prefill={{
+              name: lead?.name || '',
+              email: lead?.email || '',
+              // a3 mirrors the other Flashfire sites, where phone is the 3rd
+              // invitee question; Calendly ignores the key if it differs here.
+              ...(lead?.phone ? { customAnswers: { a3: lead.phone } } : {}),
+            }}
             styles={{ height: '92vh', width: '100%' }}
           />
         </div>

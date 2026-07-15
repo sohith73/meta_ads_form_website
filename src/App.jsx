@@ -14,7 +14,18 @@ import { captureTrackingParams } from './lib/tracking'
 
 export default function App() {
   const [showCalendly, setShowCalendly] = useState(false)
+  const [calendlyLead, setCalendlyLead] = useState(null)
   const [locale, setLocale] = useState(() => getLocaleFromPath(window.location.pathname))
+
+  // Nav/Hero buttons pass a click event; only the wizard passes lead data.
+  // Prefilling Calendly with the submitted email is what lets the backend
+  // webhook match the booking back to the meta lead and flip it to scheduled.
+  function openCalendly(lead) {
+    if (lead && typeof lead === 'object' && typeof lead.email === 'string') {
+      setCalendlyLead(lead)
+    }
+    setShowCalendly(true)
+  }
 
   useEffect(() => {
     captureTrackingParams()
@@ -45,15 +56,15 @@ export default function App() {
 
   return (
     <>
-      <Nav onOpenCalendly={() => setShowCalendly(true)} />
-      <Hero locale={locale} onOpenCalendly={() => setShowCalendly(true)} />
+      <Nav onOpenCalendly={openCalendly} />
+      <Hero locale={locale} onOpenCalendly={openCalendly} />
       <Trust />
       <HowItWorks />
       <Tiles />
       <Testimonials />
       <Employers />
       <Founder />
-      <CalendlyModal isVisible={showCalendly} onClose={() => setShowCalendly(false)} />
+      <CalendlyModal isVisible={showCalendly} lead={calendlyLead} onClose={() => setShowCalendly(false)} />
     </>
   )
 }

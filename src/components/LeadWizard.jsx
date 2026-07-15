@@ -117,7 +117,7 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
 
       setDone(true)
       document.body.classList.add('done')
-      if (onOpenCalendly) onOpenCalendly()
+      if (onOpenCalendly) onOpenCalendly({ name: name.trim(), email: email.trim().toLowerCase(), phone: phone.trim() })
     } catch {
       setSubmitting(false)
       setSubmitErr('Something went wrong. Please try again.')
