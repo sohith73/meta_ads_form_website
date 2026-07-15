@@ -34,6 +34,9 @@ export function getVisitorId() {
   }
 }
 
+// Persisted in localStorage (not sessionStorage) so ad attribution survives
+// the visitor leaving and returning directly later. Last-touch wins: params
+// on a newer visit overwrite the stored ones.
 export function captureTrackingParams() {
   try {
     const params = new URLSearchParams(window.location.search)
@@ -44,8 +47,8 @@ export function captureTrackingParams() {
     }
     if (Object.keys(found).length === 0) return
 
-    const existing = JSON.parse(sessionStorage.getItem(TRACKING_KEY) || '{}')
-    sessionStorage.setItem(TRACKING_KEY, JSON.stringify({ ...existing, ...found }))
+    const existing = JSON.parse(localStorage.getItem(TRACKING_KEY) || '{}')
+    localStorage.setItem(TRACKING_KEY, JSON.stringify({ ...existing, ...found }))
   } catch {
     // ignore storage / parse errors
   }
@@ -63,7 +66,7 @@ function getCookie(name) {
 export function getTrackingData() {
   let stored = {}
   try {
-    stored = JSON.parse(sessionStorage.getItem(TRACKING_KEY) || '{}')
+    stored = JSON.parse(localStorage.getItem(TRACKING_KEY) || '{}')
   } catch {
     stored = {}
   }
