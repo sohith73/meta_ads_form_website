@@ -11,7 +11,7 @@ import CalendlyModal from './components/CalendlyModal'
 import GeoBlockModal from './components/GeoBlockModal'
 import { getLocaleFromPath, LOCALE_CONTENT } from './lib/locale'
 import { detectCountry } from './lib/countryDetection'
-import { captureTrackingParams } from './lib/tracking'
+import { captureTrackingParams, trackPageView } from './lib/tracking'
 import { detectIndiaBlock, isIndiaClientHeuristic, isGeoBypassed, grantGeoBypass } from './lib/geoBlock'
 import { useGeoBypass } from './lib/useGeoBypass'
 
@@ -81,7 +81,10 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    // Order matters: persist this visit's utm_source first, then read it back to
+    // attribute the page view.
     captureTrackingParams()
+    trackPageView()
 
     let redirected = false
     try {

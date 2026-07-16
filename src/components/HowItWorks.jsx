@@ -25,9 +25,12 @@ const steps = [
   },
 ]
 
+import { trackButtonClick } from '../lib/tracking'
+
 export default function HowItWorks() {
   function handleGetStarted(e) {
     e.preventDefault()
+    trackButtonClick('Get Started', 'how_it_works')
     const el = document.getElementById('capture')
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }

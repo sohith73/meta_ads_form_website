@@ -1,8 +1,10 @@
 import styles from './results.module.css'
+import { trackButtonClick } from '../lib/tracking'
 
 export default function Results() {
   function handleClick(e) {
     e.preventDefault()
+    trackButtonClick('Schedule a Free Career Call', 'results')
     const el = document.getElementById('capture')
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }

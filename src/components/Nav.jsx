@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styles from './navbar.module.css'
+import { trackButtonClick } from '../lib/tracking'
 
 const LINKS = [
   { name: 'Home', href: '#top' },
@@ -55,7 +56,11 @@ export default function Nav({ onOpenCalendly, geoHoldProps = {} }) {
 
           {/* Desktop CTA */}
           <div className={styles.navRight}>
-            <button className={styles.navPrimaryButton} onClick={onOpenCalendly} {...geoHoldProps}>
+            <button
+              className={styles.navPrimaryButton}
+              onClick={(e) => { trackButtonClick('Book a Demo', 'nav_desktop'); onOpenCalendly(e) }}
+              {...geoHoldProps}
+            >
               Book a Demo →
             </button>
           </div>
@@ -93,7 +98,11 @@ export default function Nav({ onOpenCalendly, geoHoldProps = {} }) {
       {/* Mobile sticky bottom CTA */}
       {!menuOpen && (
         <div className={styles.navMobileButtonsSticky}>
-          <button className={styles.navMobilePrimary} onClick={onOpenCalendly} {...geoHoldProps}>
+          <button
+            className={styles.navMobilePrimary}
+            onClick={(e) => { trackButtonClick('Book a Demo', 'nav_mobile'); onOpenCalendly(e) }}
+            {...geoHoldProps}
+          >
             Book a Demo →
           </button>
         </div>

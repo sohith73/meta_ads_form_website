@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { API_BASE_URL } from '../lib/config'
 import { getCachedCountryCode } from '../lib/countryDetection'
 import { LOCALE_CONTENT } from '../lib/locale'
-import { getVisitorId, getTrackingData } from '../lib/tracking'
+import { getVisitorId, getTrackingData, trackButtonClick } from '../lib/tracking'
 
 const TOTAL = 3
 
@@ -58,6 +58,9 @@ export default function LeadWizard({ locale, onOpenCalendly }) {
   async function submit(e) {
     e.preventDefault()
     if (submitting || done) return
+    // The wizard's primary CTA. Counts the click itself; the resulting booking is a
+    // separate metric downstream.
+    trackButtonClick('Submit (Lead Form)', 'lead_wizard')
     let nErr = ''
     if (name.trim().length < 2) nErr = 'Please enter your full name.'
     else if (name.length > 200) nErr = 'Name must be at most 200 characters.'
